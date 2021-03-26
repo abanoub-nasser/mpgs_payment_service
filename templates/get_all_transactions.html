@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>{{ title }}</title>
+    <meta name="HandheldFriendly" content="True"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+    <link rel="shortcut icon" href="" type="image/x-icon"/>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css">
+    <meta name="theme-color" content="#5eb9d7"/>
+    {#    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="image/x-icon"/>#}
+</head>
+
+<body class="{{ template }}">
+{% block content %}
+    <div class="container">
+        <h1>transactions</h1>
+        {% for transaction in transactions %}
+            <ul id="transaction.id">
+                <li>
+                    <span class="field-name">Session ID:</span>
+                    <span class="field-value">'{{ transaction.session_id }}'</span>
+                </li>
+                <li>
+                    <span class="field-name">IP Address:</span>
+                    <span class="field-value">'{{ transaction.ipaddress }}'</span>
+                </li>
+                <li>
+                    <span class="field-name">Amount:</span>
+                    <span class="field-value">'{{ transaction.amount }}'</span>
+                </li>
+                <li>
+                    <span class="field-name">Status:</span>
+                    <span class="field-value">'{{ transaction.status }}'</span>
+                </li>
+                <li>
+                    <span class="field-name">Refrence from website:</span>
+                    <span class="field-value">'{{ transaction.reservation_refrence }}'</span>
+                </li>
+
+                <li>
+                    <span class="field-name">NAme on card:</span>
+                    <span class="field-value">'{{ transaction.nameoncard }}'</span>
+                </li>
+
+                <li>
+                    <span class="field-name">Created AT:</span>
+                    <span class="field-value">'{{ transaction.created_at }}'</span>
+                </li>
+            </ul>
+        {% endfor %}
+    </div>
+{% endblock %}
+</body>
+
+</html>
+
+

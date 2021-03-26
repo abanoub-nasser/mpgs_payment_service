@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>{{ title }}</title>
+    <meta name="HandheldFriendly" content="True"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+    <link rel="shortcut icon" href="" type="image/x-icon"/>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css">
+    <meta name="theme-color" content="#5eb9d7"/>
+    {#    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="image/x-icon"/>#}
+</head>
+
+<body class="{{ template }}">
+{% block content %}
+    <div class="container">
+        <h1>customers</h1>
+        <ul id="customer.username">
+            <li>
+                <span class="field-name">name:</span>
+                <span class="field-value">'{{ customer.name }}'</span>
+            </li>
+            <li>
+                <span class="field-name">mobile:</span>
+                <span class="field-value">'{{ customer.mobile }}'</span>
+            </li>
+            <li>
+                <span class="field-name">ID on odoo:</span>
+                <span class="field-value">'{{ customer.odoo_id }}'</span>
+            </li>
+            <li>
+                <span class="field-name">created at:</span>
+                <span class="field-value">'{{ customer.created_at }}'</span>
+            </li>
+
+        </ul>
+
+
+        <table>
+            {% for transaction in customer_transactions %}
+                <TR>
+                    <TD class="c1"><a
+                            href="{{ url_for('get_transaction', id=transaction.id) }}">
+                        {{ transaction.session_id }}</a></TD>
+{#                    <TD class="c2">{{ transaction.session_id }}</TD>#}
+                    <TD class="c3">'{{ transaction.operation }}'</TD>
+                    <TD class="c4"><SPAN>'{{ transaction.amount }}'</SPAN></TD>
+                    <TD class="c5"><SPAN>'{{ transaction.status }}'</SPAN></TD>
+                    <TD class="c4"><SPAN>'{{ transaction.created_at }}'</SPAN></TD>
+                    <TD class="c5"><SPAN>'{{ transaction.numberofcard }}'</SPAN></TD>
+                </TR>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
+</body>
+
+</html>
+
+

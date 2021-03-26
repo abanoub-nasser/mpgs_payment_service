@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>{{ title }}</title>
+    <meta name="HandheldFriendly" content="True"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+    <link rel="shortcut icon" href="" type="image/x-icon"/>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css">
+    <meta name="theme-color" content="#5eb9d7"/>
+    {#    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="image/x-icon"/>#}
+</head>
+
+<body class="{{ template }}">
+{% block content %}
+    <div class="container">
+        <h1>Transaction</h1>
+        <ul id="transaction.id">
+            <li>
+                <span class="field-name">Session ID:</span>
+                <span class="field-value">'{{ transaction.session_id }}'</span>
+            </li>
+            <li>
+                <span class="field-name">Device:</span>
+                <span class="field-value">'{{ transaction.device }}'</span>
+            </li>
+            <li>
+                <span class="field-name">IP Address</span>
+                <span class="field-value">'{{ transaction.ipaddress }}'</span>
+            </li>
+            <li>
+                <span class="field-name">Operation:</span>
+                <span class="field-value">'{{ transaction.operation }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Success Indicator: </span>
+                <span class="field-value">'{{ transaction.successindicator }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Amount:</span>
+                <span class="field-value">'{{ transaction.amount }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Certainty:</span>
+                <span class="field-value">'{{ transaction.certainty }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Currency:</span>
+                <span class="field-value">'{{ transaction.currency }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Reservation Refrence:</span>
+                <span class="field-value">'{{ transaction.reservation_refrence }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Update Status:</span>
+                <span class="field-value">'{{ transaction.updatestatus }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Card Brand:</span>
+                <span class="field-value">'{{ transaction.card_brand }}'</span>
+            </li>
+
+
+
+
+
+            <li>
+                <span class="field-name">Expiary Year:</span>
+                <span class="field-value">'{{ transaction.expiary_year }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Expiary Month:</span>
+                <span class="field-value">'{{ transaction.expiary_month }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Funding Method:</span>
+                <span class="field-value">'{{ transaction.fundingmethod }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Name on card:</span>
+                <span class="field-value">'{{ transaction.nameoncard }}'</span>
+            </li>
+
+             <li>
+                <span class="field-name">Number of card:</span>
+                <span class="field-value">'{{ transaction.numberofcard }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Scheme:</span>
+                <span class="field-value">'{{ transaction.scheme }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Status:</span>
+                <span class="field-value">'{{ transaction.status }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Transaction ID:</span>
+                <span class="field-value">'{{ transaction.transactionid }}'</span>
+            </li>
+
+            <li>
+                <span class="field-name">Created At:</span>
+                <span class="field-value">'{{ transaction.created_at }}'</span>
+            </li>
+
+        </ul>
+    </div>
+{% endblock %}
+</body>
+
+</html>
+
+

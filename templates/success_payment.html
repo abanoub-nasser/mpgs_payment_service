@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+    <title>Ahli e-shopping Payment Result</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: white;
+            font-family: "Open Sans", "sans-serif";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .buttons {
+            margin-top: 40px;
+        }
+
+        .button {
+            padding: 15px 20px;
+            border: 0;
+            border-radius: 10px;
+            background-color: #19c6ed;
+            cursor: pointer;
+        }
+
+        .center-div {
+            text-align: center;
+            margin-top: 100px
+        }
+
+    </style>
+    <script>
+
+     window.setTimeout(function(){
+
+       // Move to a new location or you can do something else
+       window.location.href = "https://www.google.co.in";
+       console.log("{{ order_id }}")
+         console.log("{{ transaction }}")
+       }, 5000);
+
+ </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="center-div">
+    <div class="images">
+        <img src="/mpgs_service/static/img/logo2.png" alt=""/>
+        <img src="/mpgs_service/static/img/ahly2.png" alt="ahly" style="margin-bottom: -13px;"/>
+    </div>
+    <div style="width: 100%; margin-top: 50px; text-align: center;">
+        <div style="margin-top: 20px">Payment Completed</div>
+        <div style="margin-top: 20px">process number: "{{ transaction }}"</div>
+    </div>
+    <div class="buttons">
+        <button class="button">Print Payment Recipt</button>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+
