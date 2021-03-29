@@ -1,11 +1,7 @@
 <html>
 <head>
     <!-- INCLUDE SESSION.JS JAVASCRIPT LIBRARY -->
-    <script src="https://test-nbe.gateway.mastercard.com/form/version/59/merchant/{{ marchant }}/session.js"
-            data-error="http://127.0.0.1:5000/payment/mpgs/error/"
-            data-cancel="http://127.0.0.1:5000/payment/mpgs/cancel/"
-            data-complete="http://127.0.0.1:5000/check-payment"
-            data-timeout="http://127.0.0.1:5000/payment/mpgs/timeout/">
+    <script src="https://test-nbe.gateway.mastercard.com/form/version/59/merchant/{{ marchant }}/session.js">
 
     </script>
     <!-- APPLY CLICK-JACKING STYLING AND HIDE CONTENTS OF THE PAGE -->
@@ -60,59 +56,18 @@
             initialized: function (response) {
                 console.log("Session initialized");
             },
-            formSessionUpdate: function (response) {
+            formSessionUpdate: async function (response) {
                 // HANDLE RESPONSE FOR UPDATE SESSION
                 if (response.status) {
                     if ("ok" == response.status) {
                         var xhr = new XMLHttpRequest();
-                        xhr.open("POST", "http://127.0.0.1:5000/return", true);
+                        xhr.open("POST", "{{url_for('handling_response')}}", true);
                         xhr.setRequestHeader('Content-Type', 'application/json');
-                        xhr.send(JSON.stringify({
+                        await xhr.send(JSON.stringify({
                             response
                         }));
-                        window.location.href = "{{url_for('success_handler')}}";
-                        {#var xhr = new XMLHttpRequest();#}
-                        {#xhr.open("POST", "http://127.0.0.1:5000/success", true);#}
-                        {#xhr.setRequestHeader('Content-Type', 'application/json');#}
-                        {#xhr.send(JSON.stringify({#}
-                        {#    response#}
-                        {#}));#}
                         console.log(JSON.stringify({response}));
-                        {#console.log(response.status)#}
-                        {#console.log(response.status)#}
-                        {#console.log(response.status)#}
-
-
-                        {#{
-                        {#    "status":"ok",
-                        {#    "merchant": "TESTMERCHANT",
-                        {#    "session": {
-                        {#        "id": "SESSION000218450948092491657986"
-                        {#        "updateStatus":"SUCCESS",
-                        {#        "version":"e3f144ce02"
-                        {#    },
-                        {#    "sourceOfFunds": {
-                        {#        "provided": {
-                        {#            "card": {
-                        {#                "brand": "MASTERCARD",
-                        {#                "expiry": {
-                        {#                    "month": "5",
-                        {#                    "year": "21"
-                        {#                },
-                        {#                "fundingMethod": "DEBIT",
-                        {#                "nameOnCard": "John Smith",
-                        {#                "number": "512345xxxxxx8769",
-                        {#                "scheme": "MASTERCARD"
-                        {#            }
-                        {#        },
-                        {#        "type": "CARD"
-                        {#    },
-                        {#    "version": "43"
-                        {#}
-
-
-
-                        {#console.log("Session updated with data: " + response.);#}
+                        window.location.href = "{{url_for('success_handler')}}";
 
 
                         //check if the security code was provided by the user
@@ -143,7 +98,7 @@
 
 
                     } else if ("system_error" == response.status) {
-                        window.location.href =  "{{url_for('error_handler')}}";
+                        window.location.href = "{{url_for('error_handler')}}";
 
                     }
                 } else {

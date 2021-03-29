@@ -1,145 +1,31 @@
-# import os
-# import sys
-# from flask import Flask, request, flash, url_for, redirect, render_template, jsonify
-# import requests
-# from flask_sqlalchemy import SQLAlchemy
-#
-#
-# try:
-#     from dotenv import load_dotenv
-#     load_dotenv()
-# except ImportError as e:
-#     pass
-#
-# sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-#
-# from mpg import Client
-#
-# app = Flask(__name__)
-# print(os.environ)
-# DEBUG = False
-# TESTING = False
-# CSRF_ENABLED = True
-# SECRET_KEY = '2albekbahrmaleh'
-# SQLALCHEMY_DATABASE_URI = 'postgresql://localhost:5432/flask_payment'
-# db = SQLAlchemy(app)
-#
-# merchant_id = 'merchant.EGPTEST1'
-# access_code = os.getenv('access_code')
-# secret = os.getenv('secret')
-# currency = 'ZMW'
-# amount = 1
-#
-# client = Client(
-#     merchant_id,
-#     access_code,
-#     secret,
-#     currency,
-#     receipt_url='http://127.0.0.1:8080/receipt'
-# )
-#
-#
-#
-#
-# class PaymentSessions(db.Model):
-
-#
-#
-#
-
-#
-#
-#
-
-#
-#
-# @app.route('/paymentlink')
-
-#
-#
-# @app.route('/return', methods=['POST'])
-# def payment_link():
-#     request_data = request.get_json()
-#
-#
-#
-#     # print(request_data)
-#     # print(request_data['response']['session']['id'])
-#     # return request_data
-#     # language = request_data['language']
-#     # framework = request_data['framework']
-#
-#     # two keys are needed because of the nested object
-#
-#
-#
-#
-#
-#
-#     # link = client.payment_link(amount)
-#     # # print(link)
-#     #
-#     # res = {
-#     #     "res": "Generate 3 Party Link",
-#     #     "payment_link": link
-#     # }
-#     #
-#     # return jsonify(res)
-#
-#
-# @app.route('/receipt')
-# def receipt():
-#
-#     req_data = request.args
-#
-#     res_data = {
-#         **req_data
-#     }
-#
-#     res_data['txn_is_verified'] = client.verify_txn(res_data)
-#
-#     return jsonify(res_data)
-#
-#
-# if __name__ == '__main__':
-#     app.run(
-#         host='0.0.0.0',
-#         port=8080,
-#         debug=True
-#     )
-
-
-
-
-
-# Previous imports remain...
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask import Flask, request, render_template, redirect,session,url_for
 import requests
 from flask_user import login_required, UserManager, UserMixin
-import cryptocode
 import json
 import random
-from urllib.parse import quote, unquote
+
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://abanoub:.ABanob23@localhost:5432/flask_payment2"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://dbadmin:7RORVuSQYDT3Y@localhost:5432/flask_payment2"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Flask-User settings
 app.config['USER_APP_NAME'] = "Payment Service"  # Shown in and email templates and page footers
 app.config['USER_ENABLE_EMAIL'] = False  # Disable email authentication
 app.config['USER_ENABLE_USERNAME'] = True  # Enable username authentication
+app.config['USER_ENABLE_REGISTER'] = False #Disable registration process
 app.config['USER_REQUIRE_RETYPE_PASSWORD'] = False  # Simplify register form
 app.config['SECRET_KEY'] = 'ksdfnjdfndjfbnsdjfbsdfsdfk5g5fg41f5g41fg5f4g5dfg415h4rhj4'
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()`~-=_+[]{}|;\':",./<>? '
-numbers = ['%02d' % i for i in range(100)]
-random.shuffle(numbers)
+numbers = ['74', '23', '17', '48', '57', '25', '19', '77', '53', '52', '30', '59', '73', '35', '39', '18', '62', '41', '75', '43', '95', '13', '12', '38', '93', '20', '03', '29', '46', '34', '71', '79', '50', '31', '90', '54', '87', '81', '67', '47', '97', '69', '85', '56', '61', '88', '21', '94', '64', '49', '92', '40', '96', '01', '60', '80', '63', '82', '99', '04', '26', '51', '72', '10', '98', '89', '86', '66', '02', '76', '65', '28', '22', '83', '27', '09', '44', '15', '68', '14', '16', '45', '32', '70', '37', '36', '91', '78', '08', '24', '05', '58', '55', '33', '06', '00', '42', '07', '11', '84']
+
+# random.shuffle(numbers)
 # print(random.shuffle(numbers))
 cypher = {a: b for a, b in zip(LETTERS, numbers)}
 
@@ -178,12 +64,9 @@ class Customer(db.Model):
     __tablename__ = 'customer'
 
     id = db.Column(db.Integer, primary_key=True)
-
     name = db.Column(db.String(140), index=True)
     mobile = db.Column(db.String(20))
     odoo_id = db.Column(db.Integer, unique=True)
-
-    # transaction_id = db.Column(db.Integer, db.ForeignKey("payment_session.payment_id"))
     paymentsessions = db.relationship("PaymentSession",backref=db.backref('customer', lazy='joined'),
         lazy='dynamic')
     created_at = db.Column(db.DateTime, server_default=db.func.now())
@@ -232,10 +115,7 @@ class PaymentSession(db.Model):
     transactionid = db.Column(db.String(255),
                               index=True)  # request_data['response']['transaction']['acquirer']['transactionId']
     created_at = db.Column(db.DateTime, server_default=db.func.now())
-
-
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
-    # customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
 
 
 
@@ -251,59 +131,27 @@ class PaymentSession(db.Model):
 user_manager = UserManager(app, db, User)
 
 
-
-# @app.route('/')
-# def home_page():
-#         # String-based templates
-#     return render_template_string("""
-#             {% extends "flask_user_layout.html" %}
-#             {% block content %}
-#                 <h2>Home page</h2>
-#                 <p><a href={{ url_for('user.register') }}>Register</a></p>
-#                 <p><a href={{ url_for('user.login') }}>Sign in</a></p>
-#                 <p><a href={{ url_for('home_page') }}>Home page</a> (accessible to anyone)</p>
-#                 <p><a href={{ url_for('member_page') }}>Member page</a> (login required)</p>
-#                 <p><a href={{ url_for('user.logout') }}>Sign out</a></p>
-#             {% endblock %}
-#         """)
 @app.route('/')
 def home():
     return render_template('error_page.html')
 
 @app.route('/success', methods=['GET'])
 def success_handler():
-    print(session)
-    # request_data = request.get_json()
-    # if request.get_json() and request.method == 'POST':
-    #     print('post',request_data)
-    #     return render_template('success_payment.html')
-    #
-    # else:
-
-    return render_template('success_payment.html',transaction=session['messages'])
+    return render_template('success_payment.html',transaction=session['messages'],order_id=session['orderid'])
 
 
 @app.route('/error', methods=['GET'])
 def error_handler():
-    return render_template('error_page.html')
+    return render_template('error_page.html', order_id=session['orderid'])
 
 @app.route('/createlink', methods=['POST'])
 def link_creator():
     request_data = request.get_json()
-    print(request_data)
-    # encoded = cryptocode.encrypt(str(request_data), ".ABanob23")
-
-
-
     x = ''.join(cypher[ch] for ch in str(request_data))
-
-
-    return {'url':'http://127.0.0.1:5000/paymentlink/'+x+'/'}
+    return {'url':'https://cairopay.orkiservers.com'+url_for('create_payment_link', params=x)}
 
 @app.route('/paymentlink/<params>/', methods=['GET'])
 def create_payment_link(params):
-    # decoded = cryptocode.decrypt(params, ".ABanob23")
-    # args = json.loads(decoded)
     inverse_cypher = {b: a for a, b in cypher.items()}
     n = ''.join(inverse_cypher[a + b] for a, b in zip(*[iter(params)] * 2))
     print(type(n))
@@ -335,11 +183,8 @@ def create_payment_link(params):
             response = requests.post('https://test-nbe.gateway.mastercard.com/api/nvp/version/59',
                                      data=data).content.decode("utf-8")
             response_dict = {k: v for k, v in (line.split("=") for line in response.split('&'))}
-            print(response_dict)
             created_session = PaymentSession(session_id=response_dict['session.id'],successindicator=response_dict['successIndicator'])
-
             db.session.add(created_session)
-            print('jnjnjnjnjnjjnnnnnnnnnnnnnnjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjnnn')
             customer_session = Customer.query.filter_by(odoo_id=args['odoo_id']).first()
             if customer_session:
                 customer_session.paymentsessions.append(created_session)
@@ -396,11 +241,8 @@ def all_transactions():
 @app.route('/return', methods=['POST'])
 def handling_response():
     request_data = request.get_json()
-    print(request_data['response']['session']['id'])
     payment_session_return = PaymentSession.query.filter_by(successindicator=request_data['response']['interaction']['successIndicator'],session_id=request_data['response']['session']['id']).first_or_404()
-
     if payment_session_return:
-
         payment_session_return.device = request_data['response']['device']['browser']
         payment_session_return.ipaddress = request_data['response']['device']['ipAddress']
         payment_session_return.operation = request_data['response']['interaction']['operation']
@@ -420,9 +262,10 @@ def handling_response():
         payment_session_return.status = request_data['response']['status']
         payment_session_return.transactionid = request_data['response']['transaction']['acquirer']['transactionId']
         db.session.commit()
-        print(request_data['response']['session']['id'])
-
         session['messages'] = request_data['response']['interaction']['successIndicator']
+        session['orderid'] = request_data['response']['transaction']['acquirer']['transactionId']
+
+        print(session)
         return render_template('success_payment.html',transaction=request_data['response']['interaction']['successIndicator'])
         #very important
         #create the payment on odoo and try to get printed receipt from odoo too....
@@ -436,7 +279,7 @@ def handling_response():
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',
-        port=8080,
+        port=5000,
         debug=True
         )
     db.create_all()

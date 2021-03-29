@@ -1,11 +1,7 @@
 <html>
 <head>
     <!-- INCLUDE SESSION.JS JAVASCRIPT LIBRARY -->
-    <script src="https://test-nbe.gateway.mastercard.com/form/version/59/merchant/{{marchant}}/session.js"
-            data-error="http://127.0.0.1:5000/payment/mpgs/error/"
-            data-cancel="http://127.0.0.1:5000/payment/mpgs/cancel/"
-            data-complete="http://127.0.0.1:5000/check-payment"
-            data-timeout="http://127.0.0.1:5000/payment/mpgs/timeout/">
+    <script src="https://test-nbe.gateway.mastercard.com/form/version/59/merchant/{{marchant}}/session.js">
 
     </script>
     <!-- APPLY CLICK-JACKING STYLING AND HIDE CONTENTS OF THE PAGE -->
@@ -30,7 +26,7 @@
 <div>اسم صاحب الكارت:<input type="text" id="cardholder-name" class="input-field" title="cardholder name"
                             aria-label="enter name on card" value="" tabindex="5" readonly></div>
 <div>
-    <button id="payButton" onclick="pay('card');">Pay Now</button>
+    <button id="payButton" onclick="pay('card');">ادفع الان</button>
 </div>
 
 <!-- JAVASCRIPT FRAME-BREAKER CODE TO PROVIDE PROTECTION AGAINST IFRAME CLICK-JACKING -->
@@ -60,16 +56,18 @@
             initialized: function (response) {
                 console.log("Session initialized");
             },
-            formSessionUpdate: function (response) {
+            formSessionUpdate: async function (response) {
                 // HANDLE RESPONSE FOR UPDATE SESSION
                 if (response.status) {
                     if ("ok" == response.status) {
                         var xhr = new XMLHttpRequest();
-                        xhr.open("POST", "http://127.0.0.1:5000/return", true);
+                        xhr.open("POST", "{{url_for('handling_response')}}", true);
                         xhr.setRequestHeader('Content-Type', 'application/json');
-                        xhr.send(JSON.stringify({
+                        await xhr.send(JSON.stringify({
                             response
                         }));
+                        console.log(JSON.stringify({response}));
+                        window.location.href = "{{url_for('success_handler')}}";
 
 
                         //check if the security code was provided by the user
@@ -96,10 +94,12 @@
                             console.log("Security code invalid.");
                         }
                     } else if ("request_timeout" == response.status) {
-                            window.location.href = "{{url_for('error_handler')}}";
+                        window.location.href = "{{url_for('error_handler')}}";
+
 
                     } else if ("system_error" == response.status) {
                         window.location.href = "{{url_for('error_handler')}}";
+
                     }
                 } else {
                     window.location.href = "{{url_for('error_handler')}}";
